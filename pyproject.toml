@@ -1,0 +1,12 @@
+[project]
+name = "wiki-speedrun"
+version = "0.1.0"
+description = "Script for playing wiki game from one page to another"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "requests>=2.32.5",
+    "sentence-transformers>=5.1.2",
+    "urllib3<2",
+]
