@@ -22,9 +22,17 @@ if "selected_difficulty" not in st.session_state:
 
 
 difficulty_levels = ["Easy", "Medium", "Hard", "Expert"]
-difficulty = st.selectbox("Select Difficulty Level", difficulty_levels)
+difficulty = st.selectbox("Select Difficulty Level", difficulty_levels,
+                          help="""
+                        Easy → Start: Popular link | End: Popular link  
+                        Medium → Start: Popular link | End: Random link  
+                        Hard → Start: Random link | End: Popular link  
+                        Expert → Start: Random link | End: Random link  
 
-if st.button("🎲 Reroll Links"):
+                        Traversal limit: **40 steps** per run.
+                    """)
+
+if st.button("Reroll Links"):
     st.session_state.selected_difficulty = None
 
 if st.session_state.selected_difficulty != difficulty:
@@ -57,7 +65,15 @@ traversal_methods = {
     "Embedding Traversal": embedding_traversal,
     "Better Embedding Traversal": better_embedding_traversal
 }
-selected_method = st.multiselect("Select Traversal Method", list(traversal_methods.keys()),default=["Better Embedding Traversal"])
+
+traversal_help = '''
+    Naive Traversal: Randomly clicks links. Stops if the target is found or 40 hops are reached.\n
+    Embedding Traversal: Uses semantic similarity to choose the link most similar to the target page title. 40 hop limit.\n
+    Better Embedding Traversal: Uses 2 different embedding models and averages the scores, and picks the most semantically relevant link. 40 hop limit.
+'''
+
+
+selected_method = st.multiselect("Select Traversal Method", list(traversal_methods.keys()),default=["Better Embedding Traversal"],help=traversal_help)
 
 results = []
 
@@ -70,7 +86,7 @@ if st.button("Start Traversal"):
             results.append((method, time_taken, links_traversed, traversal_path, found))
 
 
-st.write("## 📊 Results Summary")
+st.write("## Results Summary")
 st.table(
     {
         "Method": [r[0] for r in results],
