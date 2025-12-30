@@ -57,11 +57,9 @@ def naive_traversal(start_url, end_url):
             titles, links = get_links_and_titles(soup)
             if end_url in links:
                 found = True
-                print("Found the target article!")
                 break
             else:
                 if not links:
-                    print("No more links to follow, stopping the traversal.")
                     break
                 rand_index = random.randint(0, len(links)-1)
                 next_link = links[rand_index]
@@ -87,22 +85,21 @@ def embedding_traversal(start_url, end_url):
         if html:
             soup = BeautifulSoup(html, "html.parser")
             titles, links = get_links_and_titles(soup)
-            filtered_links = []
-            filtered_titles = []
-            for link, title in zip(links, titles):
-                if link not in traversal_path:
-                    filtered_links.append(link)
-                    filtered_titles.append(title)
-            links = filtered_links
-            titles = filtered_titles
             if end_url in links:
                 found = True
-                print("Found the target article!")
                 break
             else:
                 if not links:
-                    print("No more links to follow, stopping the traversal.")
                     break
+                filtered_links = []
+                filtered_titles = []
+                for link, title in zip(links, titles):
+                    if link not in traversal_path:
+                        filtered_links.append(link)
+                        filtered_titles.append(title)
+                links = filtered_links
+                titles = filtered_titles
+
                 embeds = model.encode(titles, convert_to_numpy=True)                
                 #compute cosine similarity
                 cosine_similarities = [dot(embed, end_embed)/(norm(embed)*norm(end_embed)) for embed in embeds]
@@ -137,25 +134,23 @@ def better_embedding_traversal(start_url, end_url):
         if html:
             soup = BeautifulSoup(html, "html.parser")
             titles, links = get_links_and_titles(soup)
-            # Filter out already visited links
-            filtered_links = []
-            filtered_titles = []
-            for link, title in zip(links, titles):
-                if link not in traversal_path:
-                    filtered_links.append(link)
-                    filtered_titles.append(title)
-
-            links = filtered_links
-            titles = filtered_titles
-
             if end_url in links:
                 found = True
-                print("Found the target article!")
                 break
+        
             else:
                 if not links:
-                    print("No more links to follow, stopping the traversal.")
                     break
+                # Filter out already visited links
+                filtered_links = []
+                filtered_titles = []
+                for link, title in zip(links, titles):
+                    if link not in traversal_path:
+                        filtered_links.append(link)
+                        filtered_titles.append(title)
+
+                links = filtered_links
+                titles = filtered_titles
                 embeds = model.encode(titles, convert_to_numpy=True)
                 embeds_arr = np.array(embeds)                
                 dot_products = embeds_arr @ end_arr
