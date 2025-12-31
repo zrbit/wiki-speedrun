@@ -21,8 +21,8 @@ A Streamlit-based interface where you can randomly select a difficulty level, st
 
 1. clone the repository
 ```sh
-git clone <your-repo-url>
-cd <your-repo-folder>
+git clone repo
+cd repo
 ```
 2️. Install dependencies
 ```sh
