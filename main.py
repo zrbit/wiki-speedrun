@@ -73,7 +73,7 @@ traversal_help = '''
 '''
 
 
-selected_method = st.multiselect("Select Traversal Method", list(traversal_methods.keys()),default=["Better Embedding Traversal"],help=traversal_help)
+selected_method = st.multiselect("Select Traversal Method", list(traversal_methods.keys()),default=["Embedding Traversal"],help=traversal_help)
 
 results = []
 
